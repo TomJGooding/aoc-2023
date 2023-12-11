@@ -75,6 +75,24 @@ int solve_part_one(char const *filename) {
             answer += game.id;
         }
     }
+    fclose(fp);
+    return answer;
+}
 
+int solve_part_two(char const *filename) {
+    FILE *fp = fopen(filename, "r");
+    if (fp == NULL) {
+        fprintf(stderr, "ERROR: cannot open %s file\n", filename);
+        exit(EXIT_FAILURE);
+    }
+    int answer = 0;
+    char line[MAX_LEN];
+    while (fgets(line, MAX_LEN, fp)) {
+        CubeGame game = parse_game(line);
+        int power =
+            game.bag.red_cubes * game.bag.green_cubes * game.bag.blue_cubes;
+        answer += power;
+    }
+    fclose(fp);
     return answer;
 }

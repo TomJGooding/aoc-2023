@@ -20,4 +20,6 @@ bool is_possible_game(CubeGame game);
 
 int solve_part_one(char const *filename);
 
+int solve_part_two(char const *filename);
+
 #endif  // SOLUTIONS_H

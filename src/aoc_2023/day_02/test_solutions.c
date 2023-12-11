@@ -26,10 +26,15 @@ void test_solve_part_one() {
     assert(solve_part_one("example.txt") == 8);
 }
 
+void test_solve_part_two() {
+    assert(solve_part_two("example.txt") == 2286);
+}
+
 int main(void) {
     printf("Running tests...\n");
     test_parse_game();
     test_is_possible_game();
     test_solve_part_one();
+    test_solve_part_two();
     printf("PASSED\n");
 }
