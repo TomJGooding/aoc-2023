@@ -7,7 +7,7 @@ My solutions for Advent of Code 2023
 | Day 01 | :star: | :star: |
 | Day 02 | :star: | :star: |
 | Day 03 | :star: | :star: |
-| Day 04 |        |        |
+| Day 04 | :star: |        |
 | Day 05 |        |        |
 | Day 06 |        |        |
 | Day 07 |        |        |
