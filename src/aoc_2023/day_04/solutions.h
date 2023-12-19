@@ -16,6 +16,7 @@ typedef struct WinningNumbers {
 typedef struct Game {
     Scratchcard scratchcard;
     WinningNumbers winning_numbers;
+    int match_count;
     int score;
 } Game;
 
@@ -26,5 +27,7 @@ Scratchcard parse_scratchcard(char *scratchcard_data);
 Game parse_game(char *line);
 
 int solve_part_one(char const *filename);
+
+int solve_part_two(char const *filename);
 
 #endif  // SOLUTIONS_H

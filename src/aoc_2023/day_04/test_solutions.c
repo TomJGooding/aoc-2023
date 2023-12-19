@@ -24,10 +24,16 @@ void test_parse_game() {
     Game actual = parse_game(line);
     assert(actual.winning_numbers.count == 5);
     assert(actual.scratchcard.count == 8);
+    assert(actual.match_count == 4);
+    assert(actual.score == 8);
 }
 
 void test_solve_part_one() {
     assert(solve_part_one("example.txt") == 13);
+}
+
+void test_solve_part_two() {
+    assert(solve_part_two("example.txt") == 30);
 }
 
 int main(void) {
@@ -36,5 +42,6 @@ int main(void) {
     test_parse_scratchcard();
     test_parse_game();
     test_solve_part_one();
+    test_solve_part_two();
     printf("PASSED\n");
 }
