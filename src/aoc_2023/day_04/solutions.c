@@ -7,7 +7,7 @@
 #define MAX_LEN 256
 
 WinningNumbers parse_winning_numbers(char *winning_data) {
-    WinningNumbers winning_numbers = {.count = 0, .numbers = {0}};
+    WinningNumbers winning_numbers = {.count = 0, .numbers = {}};
     char *winning_save_ptr = NULL;
     char *winning_number = strtok_r(winning_data, " ", &winning_save_ptr);
     while (winning_number) {
@@ -20,7 +20,7 @@ WinningNumbers parse_winning_numbers(char *winning_data) {
 }
 
 Scratchcard parse_scratchcard(char *scratchcard_data) {
-    Scratchcard scratchcard = {.count = 0, .numbers = {0}};
+    Scratchcard scratchcard = {.count = 0, .numbers = {}};
     char *scrathcard_save_ptr = NULL;
     char *scratchard_number =
         strtok_r(scratchcard_data, " ", &scrathcard_save_ptr);
@@ -45,7 +45,24 @@ Game parse_game(char *line) {
     Game game = {
         .winning_numbers = winning_numbers,
         .scratchcard = scratchcard,
+        .match_count = 0,
         .score = 0};
+
+    for (size_t i = 0; i < game.scratchcard.count; i++) {
+        for (size_t j = 0; j < game.winning_numbers.count; j++) {
+            if (game.scratchcard.numbers[i] ==
+                game.winning_numbers.numbers[j]) {
+                game.match_count++;
+
+                if (game.match_count == 1) {
+                    game.score += 1;
+                } else {
+                    game.score *= 2;
+                }
+            }
+        }
+    }
+
     return game;
 }
 
@@ -58,28 +75,45 @@ int solve_part_one(const char *filename) {
 
     int answer = 0;
 
-    char line[256];
+    char line[MAX_LEN];
     while (fgets(line, MAX_LEN, fp)) {
         Game game = parse_game(line);
-        int match_count = 0;
-        for (size_t i = 0; i < game.scratchcard.count; i++) {
-            for (size_t j = 0; j < game.winning_numbers.count; j++) {
-                if (game.scratchcard.numbers[i] ==
-                    game.winning_numbers.numbers[j]) {
-                    match_count++;
-
-                    if (match_count == 1) {
-                        game.score += 1;
-                    } else {
-                        game.score *= 2;
-                    }
-                }
-            }
-        }
         answer += game.score;
     }
 
     fclose(fp);
+
+    return answer;
+}
+
+int solve_part_two(const char *filename) {
+    FILE *fp = fopen(filename, "r");
+    if (fp == NULL) {
+        fprintf(stderr, "ERROR: cannot open %s file\n", filename);
+        exit(EXIT_FAILURE);
+    }
+
+    size_t card_counts[MAX_LEN] = {};
+    size_t card_idx = 0;
+
+    char line[MAX_LEN];
+    while (fgets(line, MAX_LEN, fp)) {
+        Game game = parse_game(line);
+        card_counts[card_idx]++;
+        for (size_t next_card = card_idx + 1;
+             next_card <= card_idx + game.match_count;
+             next_card++) {
+            card_counts[next_card] += card_counts[card_idx];
+        }
+        card_idx++;
+    }
+
+    fclose(fp);
+
+    int answer = 0;
+    for (size_t i = 0; i < card_idx; i++) {
+        answer += card_counts[i];
+    }
 
     return answer;
 }
