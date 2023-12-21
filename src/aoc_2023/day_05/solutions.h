@@ -1,10 +1,5 @@
 #include <stddef.h>
 
-typedef struct Seeds {
-    unsigned int ids[32];
-    size_t count;
-} Seeds;
-
 typedef struct Range {
     unsigned int start;
     unsigned int stop;
