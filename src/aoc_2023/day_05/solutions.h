@@ -28,3 +28,5 @@ typedef struct Map {
 } Map;
 
 unsigned int solve_part_one(char const *filename);
+
+unsigned int solve_part_two(char const *filename);
