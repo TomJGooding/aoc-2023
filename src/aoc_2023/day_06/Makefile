@@ -1,6 +1,6 @@
 OBJECTS = solutions.o
 CFLAGS = -g -Wall -Wextra -Werror -O3
-LDLIBS =
+LDLIBS = -lm
 
 .PHONY: solve
 solve: main.o

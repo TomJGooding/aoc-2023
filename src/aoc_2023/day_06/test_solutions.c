@@ -30,10 +30,23 @@ void test_solve_part_one() {
     assert(solve_part_one("example.txt") == 288);
 }
 
+void test_parse_single_race() {
+    Race actual = parse_single_race("example.txt");
+    Race expected = {.time = 71530, .record_dist = 940200};
+    assert(actual.time == expected.time);
+    assert(actual.record_dist == expected.record_dist);
+}
+
+void test_solve_part_two() {
+    assert(solve_part_two("example.txt") == 71503);
+}
+
 int main(void) {
     printf("Running tests...\n");
     test_parse_races();
     test_count_ways_to_win();
     test_solve_part_one();
+    test_parse_single_race();
+    test_solve_part_two();
     printf("PASSED\n");
 }

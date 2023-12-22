@@ -1,5 +1,6 @@
 #include "solutions.h"
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -28,11 +29,12 @@ void parse_races(char const *filename, Race *races, size_t *races_count) {
     fclose(fp);
 }
 
-int count_ways_to_win(Race race) {
-    int count = 0;
-    for (int charge_time = 1; charge_time < race.time; charge_time++) {
-        int remaining_time = race.time - charge_time;
-        int distance = charge_time * remaining_time;
+long long int count_ways_to_win(Race race) {
+    long long int count = 0;
+    for (long long int charge_time = 1; charge_time < race.time;
+         charge_time++) {
+        long long int remaining_time = race.time - charge_time;
+        long long int distance = charge_time * remaining_time;
         if (distance > race.record_dist) {
             count++;
         }
@@ -51,4 +53,39 @@ int solve_part_one(char const *filename) {
     }
 
     return answer;
+}
+
+Race parse_single_race(char const *filename) {
+    FILE *fp = fopen(filename, "r");
+    if (fp == NULL) {
+        fprintf(stderr, "ERROR: could not open %s file\n", filename);
+        exit(EXIT_FAILURE);
+    }
+
+    long long int time = 0;
+    long long int distance = 0;
+    int num;
+
+    fscanf(fp, "Time:");
+    while (fscanf(fp, "%d", &num)) {
+        int num_digits = (int)log10(num) + 1;
+        time *= pow(10, num_digits);
+        time += num;
+    }
+    fscanf(fp, "Distance:");
+    while (fscanf(fp, "%d", &num) != EOF) {
+        int num_digits = (int)log10(num) + 1;
+        distance *= pow(10, num_digits);
+        distance += num;
+    }
+
+    fclose(fp);
+
+    Race race = {.time = time, .record_dist = distance};
+    return race;
+}
+
+long long int solve_part_two(char const *filename) {
+    Race race = parse_single_race(filename);
+    return count_ways_to_win(race);
 }
