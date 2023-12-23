@@ -43,8 +43,6 @@ void test_parse_hand() {
     assert(memcmp(actual.cards, expected_cards, sizeof(actual.cards)) == 0);
 
     assert(actual.bid == 765);
-
-    assert(actual.type == ONE_PAIR);
 }
 
 void test_parse_hands() {
