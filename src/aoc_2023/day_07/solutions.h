@@ -8,6 +8,7 @@
 #define MAX_HANDS 1024
 
 enum Card {
+    JOKER,
     TWO,
     THREE,
     FOUR,

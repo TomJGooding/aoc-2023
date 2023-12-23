@@ -55,7 +55,7 @@ Hand parse_hand(char *line) {
     for (int i = 0; i < HAND_CARDS; i++) {
         enum Card card;
         if (isdigit(line[i])) {
-            card = line[i] - '2';
+            card = line[i] - '1';
             hand.cards[i] = card;
         } else if (line[i] == 'A') {
             card = ACE;
@@ -74,15 +74,13 @@ Hand parse_hand(char *line) {
             hand.cards[i] = card;
         } else {
             fprintf(
-                stderr, "ERROR: found unexpected '%c' in hand input", line[i]
+                stderr, "ERROR: found unexpected '%c' in hand input\n", line[i]
             );
             exit(EXIT_FAILURE);
         }
     }
 
     hand.bid = atoi(line + 5);
-
-    get_hand_type(&hand);
 
     return hand;
 }
@@ -132,6 +130,10 @@ int solve_part_one(char const *filename) {
     Hand hands[MAX_HANDS];
     size_t hand_count = 0;
     parse_hands(filename, hands, &hand_count);
+
+    for (size_t i = 0; i < hand_count; i++) {
+        get_hand_type(&hands[i]);
+    }
 
     qsort(hands, hand_count, sizeof(Hand), compare_hands);
 
