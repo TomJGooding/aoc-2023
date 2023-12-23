@@ -1,6 +1,6 @@
 # Advent of Code 2023
 
-My solutions for Advent of Code 2023
+My solutions for Advent of Code 2023 in C.
 
 |  Day   | Part 1 | Part 2 |
 | :----: | :----: | :----: |
@@ -10,7 +10,7 @@ My solutions for Advent of Code 2023
 | Day 04 | :star: | :star: |
 | Day 05 | :star: | :star: |
 | Day 06 | :star: | :star: |
-| Day 07 |        |        |
+| Day 07 | :star: |        |
 | Day 08 |        |        |
 | Day 09 |        |        |
 | Day 10 |        |        |
