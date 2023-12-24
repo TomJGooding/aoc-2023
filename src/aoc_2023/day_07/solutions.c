@@ -7,6 +7,10 @@
 
 #define MAX_LEN 16
 
+int compare_card_counts(const void *a, const void *b) {
+    return (*(int *)b - *(int *)a);
+}
+
 void get_hand_type(Hand *hand) {
     int card_counts[TOTAL_CARD_TYPES] = {};
 
@@ -14,43 +18,36 @@ void get_hand_type(Hand *hand) {
         card_counts[hand->cards[i]]++;
     }
 
-    bool three_found = false;
-    int pairs_count = 0;
-    for (size_t j = 0; j < TOTAL_CARD_TYPES; j++) {
-        if (card_counts[j] == 5) {
-            hand->type = FIVE_OF_A_KIND;
-            return;
-        }
-        if (card_counts[j] == 4) {
-            hand->type = FOUR_OF_A_KIND;
-            return;
-        }
-        if (card_counts[j] == 3) {
-            three_found = true;
-        }
-        if (card_counts[j] == 2) {
-            pairs_count++;
-        }
-    }
+    int jokers_count = card_counts[JOKER];
+    card_counts[JOKER] = 0;
 
-    if (three_found) {
-        if (pairs_count) {
-            hand->type = FULL_HOUSE;
-        } else {
-            hand->type = THREE_OF_A_KIND;
-        }
-    } else if (pairs_count) {
-        if (pairs_count == 2) {
-            hand->type = TWO_PAIR;
-        } else {
-            hand->type = ONE_PAIR;
-        }
+    qsort(card_counts, TOTAL_CARD_TYPES, sizeof(int), compare_card_counts);
+
+    if (card_counts[0] == 5 - jokers_count) {
+        hand->type = FIVE_OF_A_KIND;
+        return;
+    } else if (card_counts[0] == 4 - jokers_count) {
+        hand->type = FOUR_OF_A_KIND;
+        return;
+    } else if (card_counts[0] + card_counts[1] + jokers_count == 5) {
+        hand->type = FULL_HOUSE;
+        return;
+    } else if (card_counts[0] == 3 - jokers_count) {
+        hand->type = THREE_OF_A_KIND;
+        return;
+    } else if (card_counts[0] + card_counts[1] + jokers_count == 4) {
+        hand->type = TWO_PAIR;
+        return;
+    } else if (card_counts[0] == 2 - jokers_count) {
+        hand->type = ONE_PAIR;
+        return;
     } else {
         hand->type = HIGH_CARD;
+        return;
     }
 }
 
-Hand parse_hand(char *line) {
+Hand parse_hand(char *line, bool jokers) {
     Hand hand;
     for (int i = 0; i < HAND_CARDS; i++) {
         enum Card card;
@@ -64,7 +61,11 @@ Hand parse_hand(char *line) {
             card = TEN;
             hand.cards[i] = card;
         } else if (line[i] == 'J') {
-            card = JACK;
+            if (jokers) {
+                card = JOKER;
+            } else {
+                card = JACK;
+            }
             hand.cards[i] = card;
         } else if (line[i] == 'Q') {
             card = QUEEN;
@@ -94,7 +95,7 @@ void parse_hands(char const *filename, Hand *hands, size_t *hands_count) {
 
     char line[MAX_LEN];
     while (fgets(line, MAX_LEN, fp)) {
-        hands[*hands_count] = parse_hand(line);
+        hands[*hands_count] = parse_hand(line, false);
         (*hands_count)++;
     }
 
@@ -130,6 +131,45 @@ int solve_part_one(char const *filename) {
     Hand hands[MAX_HANDS];
     size_t hand_count = 0;
     parse_hands(filename, hands, &hand_count);
+
+    for (size_t i = 0; i < hand_count; i++) {
+        get_hand_type(&hands[i]);
+    }
+
+    qsort(hands, hand_count, sizeof(Hand), compare_hands);
+
+    int answer = 0;
+
+    for (size_t i = 0; i < hand_count; i++) {
+        int rank = i + 1;
+        answer += hands[i].bid * rank;
+    }
+
+    return answer;
+}
+
+void parse_hands_with_jokers(
+    char const *filename, Hand *hands, size_t *hands_count
+) {
+    FILE *fp = fopen(filename, "r");
+    if (fp == NULL) {
+        fprintf(stderr, "ERROR: cannot open %s file\n", filename);
+        exit(EXIT_FAILURE);
+    }
+
+    char line[MAX_LEN];
+    while (fgets(line, MAX_LEN, fp)) {
+        hands[*hands_count] = parse_hand(line, true);
+        (*hands_count)++;
+    }
+
+    fclose(fp);
+}
+
+int solve_part_two(char const *filename) {
+    Hand hands[MAX_HANDS];
+    size_t hand_count = 0;
+    parse_hands_with_jokers(filename, hands, &hand_count);
 
     for (size_t i = 0; i < hand_count; i++) {
         get_hand_type(&hands[i]);

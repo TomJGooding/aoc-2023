@@ -37,7 +37,7 @@ void test_get_hand_type() {
 
 void test_parse_hand() {
     char line[] = "32T3K 765";
-    Hand actual = parse_hand(line);
+    Hand actual = parse_hand(line, false);
 
     enum Card expected_cards[5] = {THREE, TWO, TEN, THREE, KING};
     assert(memcmp(actual.cards, expected_cards, sizeof(actual.cards)) == 0);
@@ -87,6 +87,56 @@ void test_solve_part_one() {
     assert(solve_part_one("example.txt") == 6440);
 }
 
+void test_get_hand_type_with_jokers() {
+    // 4 Jokers
+    Hand five_of_kind = {.cards = {ACE, JOKER, JOKER, JOKER, JOKER}};
+    get_hand_type(&five_of_kind);
+    assert(five_of_kind.type == FIVE_OF_A_KIND);
+
+    // 3 Jokers
+    Hand five_of_kind1 = {.cards = {ACE, ACE, JOKER, JOKER, JOKER}};
+    get_hand_type(&five_of_kind1);
+    assert(five_of_kind1.type == FIVE_OF_A_KIND);
+
+    Hand four_of_a_kind1 = {.cards = {TWO, THREE, JOKER, JOKER, JOKER}};
+    get_hand_type(&four_of_a_kind1);
+    assert(four_of_a_kind1.type == FOUR_OF_A_KIND);
+
+    // 2 Jokers
+    Hand five_of_kind2 = {.cards = {ACE, ACE, ACE, JOKER, JOKER}};
+    get_hand_type(&five_of_kind2);
+    assert(five_of_kind2.type == FIVE_OF_A_KIND);
+
+    Hand four_of_kind2 = {.cards = {EIGHT, ACE, ACE, JOKER, JOKER}};
+    get_hand_type(&four_of_kind2);
+    assert(four_of_kind2.type == FOUR_OF_A_KIND);
+
+    Hand full_house1 = {.cards = {TWO, THREE, THREE, JOKER, TWO}};
+    get_hand_type(&full_house1);
+    assert(full_house1.type == FULL_HOUSE);
+
+    // 1 Jokers
+    Hand five_of_kind3 = {.cards = {ACE, ACE, ACE, ACE, JOKER}};
+    get_hand_type(&five_of_kind3);
+    assert(five_of_kind3.type == FIVE_OF_A_KIND);
+
+    Hand four_of_kind3 = {.cards = {EIGHT, ACE, ACE, ACE, JOKER}};
+    get_hand_type(&four_of_kind3);
+    assert(four_of_kind3.type == FOUR_OF_A_KIND);
+
+    Hand three_of_kind1 = {.cards = {ACE, ACE, JOKER, TWO, THREE}};
+    get_hand_type(&three_of_kind1);
+    assert(three_of_kind1.type == THREE_OF_A_KIND);
+
+    Hand one_pair = {.cards = {ACE, TWO, THREE, FOUR, JOKER}};
+    get_hand_type(&one_pair);
+    assert(one_pair.type == ONE_PAIR);
+}
+
+void test_solve_part_two() {
+    assert(solve_part_two("example.txt") == 5905);
+}
+
 int main(void) {
     printf("Running tests...\n");
     test_get_hand_type();
@@ -95,5 +145,7 @@ int main(void) {
     test_compare_hands_when_different_types();
     test_compare_hands_when_same_type();
     test_solve_part_one();
+    test_get_hand_type_with_jokers();
+    test_solve_part_two();
     printf("PASSED\n");
 }

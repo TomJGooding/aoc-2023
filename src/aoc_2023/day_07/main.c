@@ -14,8 +14,8 @@ int main(void) {
     end = clock();
     printf("(took %.4f seconds)\n", (double)(end - start) / CLOCKS_PER_SEC);
 
-    // start = clock();
-    // printf("Answer for part 2: %d ", solve_part_two("input.txt"));
-    // end = clock();
-    // printf("(took %.4f seconds)\n", (double)(end - start) / CLOCKS_PER_SEC);
+    start = clock();
+    printf("Answer for part 2: %d ", solve_part_two("input.txt"));
+    end = clock();
+    printf("(took %.4f seconds)\n", (double)(end - start) / CLOCKS_PER_SEC);
 }
