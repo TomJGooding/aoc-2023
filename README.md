@@ -10,7 +10,7 @@ My solutions for Advent of Code 2023 in C.
 | Day 04 | :star: | :star: |
 | Day 05 | :star: | :star: |
 | Day 06 | :star: | :star: |
-| Day 07 | :star: |        |
+| Day 07 | :star: | :star: |
 | Day 08 |        |        |
 | Day 09 |        |        |
 | Day 10 |        |        |
